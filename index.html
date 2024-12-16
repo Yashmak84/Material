@@ -1,9 +1,169 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        main {
+            padding: 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+
+        #subject-select {
+            margin-bottom: 1rem;
+        }
+
+        #file-list {
+            margin-top: 1rem;
+            list-style: none;
+            padding: 0;
+        }
+
+        #file-list li {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        #file-list li a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        #file-list li a:hover {
+            text-decoration: underline;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem 0;
+            background-color: #4CAF50;
+            color: white;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
 <body>
+    <header>
+        <h1>Document Viewer</h1>
+    </header>
 
-<h1>My First Heading</h1>
-<p>My first paragraph.</p>
+    <main>
+        <label for="subject-select">Select Subject:</label>
+        <select id="subject-select">
+            <option value="Maths">Maths</option>
+            <!-- Add more subjects as needed -->
+        </select>
 
+        <h2>Available Documents</h2>
+        <ul id="file-list">
+            <!-- File links will be dynamically added here -->
+        </ul>
+
+        <div class="navigation">
+            <button id="prev-day">Previous Day</button>
+            <button id="next-day">Next Day</button>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Document Viewer</p>
+    </footer>
+
+    <script>
+        // Example file structure (to simulate GitHub folders)
+        const fileStructure = {
+            Maths: [
+                { name: "2024-12-15_Math.pdf", url: "Maths/2024-12-15_Math.pdf" },
+                { name: "2024-12-16_Math.pdf", url: "documents/Maths/2024-12-16_Math.pdf" },
+                { name: "2024-12-17_Math.pdf", url: "documents/Maths/2024-12-17_Math.pdf" }
+            ]
+        };
+
+        const subjectSelect = document.getElementById('subject-select');
+        const fileList = document.getElementById('file-list');
+        const prevDayButton = document.getElementById('prev-day');
+        const nextDayButton = document.getElementById('next-day');
+
+        let currentSubject = subjectSelect.value;
+        let currentIndex = 0;
+
+        // Function to display files for the current subject and date
+        function displayFiles() {
+            fileList.innerHTML = '';
+
+            const files = fileStructure[currentSubject];
+            if (files && files[currentIndex]) {
+                const file = files[currentIndex];
+                const listItem = document.createElement('li');
+                const link = document.createElement('a');
+                link.href = file.url;
+                link.textContent = file.name;
+                link.download = file.name;
+
+                listItem.appendChild(link);
+                fileList.appendChild(listItem);
+            } else {
+                fileList.innerHTML = '<li>No files available for this date.</li>';
+            }
+        }
+
+        // Event listeners for navigation buttons
+        prevDayButton.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                displayFiles();
+            }
+        });
+
+        nextDayButton.addEventListener('click', () => {
+            if (currentIndex < fileStructure[currentSubject].length - 1) {
+                currentIndex++;
+                displayFiles();
+            }
+        });
+
+        // Event listener for subject selection
+        subjectSelect.addEventListener('change', () => {
+            currentSubject = subjectSelect.value;
+            currentIndex = 0; // Reset to the first file for the new subject
+            displayFiles();
+        });
+
+        // Initial display
+        displayFiles();
+    </script>
 </body>
 </html>
