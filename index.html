@@ -49,13 +49,26 @@
             border-radius: 4px;
         }
 
-        #file-list li a {
-            color: #007BFF;
-            text-decoration: none;
+        #file-list li button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
 
-        #file-list li a:hover {
-            text-decoration: underline;
+        #file-list li button:hover {
+            background-color: #0056b3;
+        }
+
+        #document-viewer {
+            margin-top: 1rem;
+            width: 100%;
+            height: 500px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
 
         .navigation {
@@ -72,6 +85,16 @@
             position: fixed;
             width: 100%;
             bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            #document-viewer {
+                height: 300px;
+            }
+
+            .navigation button {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -91,6 +114,8 @@
         <ul id="file-list">
             <!-- File links will be dynamically added here -->
         </ul>
+
+        <iframe id="document-viewer" src="" title="Document Viewer" hidden></iframe>
 
         <div class="navigation">
             <button id="prev-day">Previous Day</button>
@@ -116,6 +141,7 @@
         const fileList = document.getElementById('file-list');
         const prevDayButton = document.getElementById('prev-day');
         const nextDayButton = document.getElementById('next-day');
+        const documentViewer = document.getElementById('document-viewer');
 
         let currentSubject = subjectSelect.value;
         let currentIndex = 0;
@@ -127,16 +153,27 @@
             const files = fileStructure[currentSubject];
             if (files && files[currentIndex]) {
                 const file = files[currentIndex];
+
+                // Create list item with download and view buttons
                 const listItem = document.createElement('li');
                 const link = document.createElement('a');
                 link.href = file.url;
                 link.textContent = file.name;
                 link.download = file.name;
 
+                const viewButton = document.createElement('button');
+                viewButton.textContent = 'View';
+                viewButton.addEventListener('click', () => {
+                    documentViewer.src = file.url;
+                    documentViewer.hidden = false;
+                });
+
                 listItem.appendChild(link);
+                listItem.appendChild(viewButton);
                 fileList.appendChild(listItem);
             } else {
                 fileList.innerHTML = '<li>No files available for this date.</li>';
+                documentViewer.hidden = true;
             }
         }
 
